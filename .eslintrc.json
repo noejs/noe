@@ -46,6 +46,13 @@
             "WithStatement"
         ],
         "prefer-rest-params": 0,
-        "no-underscore-dangle": 0
+        "no-underscore-dangle": 0,
+        "max-len": [
+            "error",
+            {
+                "comments": 125,
+                "code": 125
+            }
+        ]
     }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable prefer-arrow-callback */
 /* eslint-disable func-names */
 /* eslint-disable class-methods-use-this */
