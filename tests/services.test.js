@@ -4,9 +4,9 @@
 process.env.NODE_CONFIG_DIR = `${process.cwd()}/tests/config/`;
 const { expect } = require('chai');
 const { describe, it } = require('mocha');
-const Noe = require('../lib');
+const { noe, di } = require('../lib');
 
-const app = Noe();
+const app = noe();
 
 describe('services registration tests', () => {
     it('should register a Factory Function constructor', () => {
@@ -19,7 +19,7 @@ describe('services registration tests', () => {
         }
 
         app.service('FFService', createService);
-        expect(app.resolve('FFService')).to.be.an('object').that.has.property('test');
+        expect(di.container.FFService).to.be.an('object').that.has.property('test');
     });
 
     it('should register an ES5 prototype constructor', () => {
@@ -31,7 +31,7 @@ describe('services registration tests', () => {
         ProtoService.prototype.configure = function () { };
 
         app.service(ProtoService);
-        expect(app.resolve('ProtoService')).to.be.an('object').that.has.property('test');
+        expect(di.container.ProtoService).to.be.an('object').that.has.property('test');
     });
 
     it('should register an ES6 class constructor', () => {
@@ -46,7 +46,7 @@ describe('services registration tests', () => {
         }
 
         app.service('ClassService', ClassService);
-        expect(app.resolve('ClassService')).to.be.an('object').that.has.property('test');
+        expect(di.container.ClassService).to.be.an('object').that.has.property('test');
     });
 
     it('should register a service defining Factory Function as service() parameter', () => {
@@ -57,23 +57,23 @@ describe('services registration tests', () => {
                 }
             };
         });
-        expect(app.resolve('InlineService')).to.be.an('object').that.has.property('test');
+        expect(di.container.InlineService).to.be.an('object').that.has.property('test');
     });
 });
 
 describe('services resolving tests', () => {
     it('should resolve the Factory Function created object and call method test() on it', () => {
-        const ffService = app.Container.resolver.FFService;
+        const ffService = di.container.FFService;
         expect(ffService.test()).to.be.equal('test string from Factory Function created object');
     });
 
     it('should resolve the ES5 prototype created object and call method test() on it', () => {
-        const protoService = app.Container.resolver.ProtoService;
+        const protoService = di.container.ProtoService;
         expect(protoService.test()).to.be.equal('test string from ES5 prototype created object');
     });
 
     it('should resolve the ES6 class created object and call method test() on it', () => {
-        const classService = app.Container.resolver.ClassService;
+        const classService = di.container.ClassService;
         expect(classService.test()).to.be.equal('test string from ES6 class created object');
     });
 });
@@ -89,7 +89,7 @@ describe('services dependencies tests', () => {
         }
 
         app.service('DepService', createServiceForDep);
-        expect(app.Container.resolver.DepService.test()).to.be.equal('test string from Factory Function created object');
+        expect(di.container.DepService.test()).to.be.equal('test string from Factory Function created object');
 
         app.service('ServiceWithDeps', ['DepService', function (depService) {
             return {
@@ -99,7 +99,7 @@ describe('services dependencies tests', () => {
             };
         }]);
 
-        const serviceWithDeps = app.Container.resolver.ServiceWithDeps;
+        const serviceWithDeps = di.container.ServiceWithDeps;
         expect(serviceWithDeps.test()).to.be.equal('TEXT FROM DEP: test string from Factory Function created object');
     });
 
@@ -112,7 +112,7 @@ describe('services dependencies tests', () => {
             };
         }]);
 
-        const autoNamedService = app.Container.resolver.AutoNamedService;
+        const autoNamedService = di.container.AutoNamedService;
         expect(autoNamedService.test()).to.be.equal('AUTONAMED: test string from Factory Function created object');
     });
 });
