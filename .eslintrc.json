@@ -53,6 +53,7 @@
                 "comments": 125,
                 "code": 125
             }
-        ]
+        ],
+        "no-console": 0
     }
 }

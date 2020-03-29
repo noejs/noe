@@ -2,3 +2,7 @@ node_modules/
 logs/
 tests/config/*.json
 samples/
+samples-noe/
+samples-two/
+lib-noe/
+lib-two/
